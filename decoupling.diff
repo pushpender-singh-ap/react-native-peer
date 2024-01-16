@@ -1,0 +1,122 @@
+diff --git a/lib/dataconnection/StreamConnection/Cbor.ts b/lib/dataconnection/StreamConnection/Cbor.ts
+index 523fdf0..8c8b3a8 100644
+--- a/lib/dataconnection/StreamConnection/Cbor.ts
++++ b/lib/dataconnection/StreamConnection/Cbor.ts
+@@ -1,6 +1,6 @@
+-import type { Peer } from "../../peer.js";
++import type { Peer } from "../../peer";
+ import { Decoder, Encoder } from "cbor-x";
+-import { StreamConnection } from "./StreamConnection.js";
++import { StreamConnection } from "./StreamConnection";
+ 
+ const NullValue = Symbol.for(null);
+ 
+diff --git a/lib/dataconnection/StreamConnection/MsgPack.ts b/lib/dataconnection/StreamConnection/MsgPack.ts
+index c2d9881..e4d362b 100644
+--- a/lib/dataconnection/StreamConnection/MsgPack.ts
++++ b/lib/dataconnection/StreamConnection/MsgPack.ts
+@@ -1,6 +1,6 @@
+ import { decodeMultiStream, Encoder } from "@msgpack/msgpack";
+-import { StreamConnection } from "./StreamConnection.js";
+-import type { Peer } from "../../peer.js";
++import { StreamConnection } from "./StreamConnection";
++import type { Peer } from "../../peer";
+ 
+ export class MsgPack extends StreamConnection {
+ 	readonly serialization = "MsgPack";
+diff --git a/lib/dataconnection/StreamConnection/StreamConnection.ts b/lib/dataconnection/StreamConnection/StreamConnection.ts
+index 6a8203c..4ff0a85 100644
+--- a/lib/dataconnection/StreamConnection/StreamConnection.ts
++++ b/lib/dataconnection/StreamConnection/StreamConnection.ts
+@@ -1,6 +1,6 @@
+-import logger from "../../logger.js";
+-import type { Peer } from "../../peer.js";
+-import { DataConnection } from "../DataConnection.js";
++import logger from "../../logger";
++import type { Peer } from "../../peer";
++import { DataConnection } from "../DataConnection";
+ 
+ export abstract class StreamConnection extends DataConnection {
+ 	private _CHUNK_SIZE = 1024 * 8 * 4;
+diff --git a/lib/negotiator.ts b/lib/negotiator.ts
+index 6f5f462..30efc98 100644
+--- a/lib/negotiator.ts
++++ b/lib/negotiator.ts
+@@ -37,7 +37,7 @@ export class Negotiator<
+ 			const config: RTCDataChannelInit = { ordered: !!options.reliable };
+ 
+ 			const dataChannel = peerConnection.createDataChannel(
+-				dataConnection.label,
++				dataConnection.label || "",
+ 				config,
+ 			);
+ 			dataConnection._initializeDataChannel(dataChannel);
+@@ -134,9 +134,7 @@ export class Negotiator<
+ 			logger.log("Received data channel");
+ 
+ 			const dataChannel = evt.channel;
+-			const connection = <DataConnection>(
+-				provider.getConnection(peerId, connectionId)
+-			);
++			const connection = provider.getConnection(peerId, connectionId);
+ 
+ 			connection._initializeDataChannel(dataChannel);
+ 		};
+diff --git a/lib/supports.ts b/lib/supports.ts
+index 902b61a..1b383ca 100644
+--- a/lib/supports.ts
++++ b/lib/supports.ts
+@@ -1,9 +1,3 @@
+-import webRTCAdapter_import from "webrtc-adapter";
+-
+-const webRTCAdapter: typeof webRTCAdapter_import =
+-	//@ts-ignore
+-	webRTCAdapter_import.default || webRTCAdapter_import;
+-
+ export const Supports = new (class {
+ 	readonly isIOS = ["iPad", "iPhone", "iPod"].includes(navigator.platform);
+ 	readonly supportedBrowsers = ["firefox", "chrome", "safari"];
+@@ -33,40 +27,15 @@ export const Supports = new (class {
+ 	}
+ 
+ 	getBrowser(): string {
+-		return webRTCAdapter.browserDetails.browser;
++		return "chrome";
+ 	}
+ 
+ 	getVersion(): number {
+-		return webRTCAdapter.browserDetails.version || 0;
++		return this.minChromeVersion;
+ 	}
+ 
+ 	isUnifiedPlanSupported(): boolean {
+-		const browser = this.getBrowser();
+-		const version = webRTCAdapter.browserDetails.version || 0;
+-
+-		if (browser === "chrome" && version < this.minChromeVersion) return false;
+-		if (browser === "firefox" && version >= this.minFirefoxVersion) return true;
+-		if (
+-			!window.RTCRtpTransceiver ||
+-			!("currentDirection" in RTCRtpTransceiver.prototype)
+-		)
+-			return false;
+-
+-		let tempPc: RTCPeerConnection;
+-		let supported = false;
+-
+-		try {
+-			tempPc = new RTCPeerConnection();
+-			tempPc.addTransceiver("audio");
+-			supported = true;
+-		} catch (e) {
+-		} finally {
+-			if (tempPc) {
+-				tempPc.close();
+-			}
+-		}
+-
+-		return supported;
++		return true;
+ 	}
+ 
+ 	toString(): string {

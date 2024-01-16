@@ -1,0 +1,31 @@
+{
+  "name": "react-native-peer",
+  "version": "1.0.0",
+  "description": "A React Native wrapper for [PeerJS](https://peerjs.com/). PeerJS simplifies WebRTC peer-to-peer data, video, and audio calls.",
+  "keywords": [
+    "webrtc",
+    "react native",
+    "peerjs",
+    "peer",
+    "react-native-webrtc",
+    "react-native-peer",
+    "react-native-peerjs"
+  ],
+  "repository": "https://github.com/pushpender-singh-ap/react-native-peer",
+  "author": "Pushpender Singh <pushpendersingh694@gmail.com> (https://github.com/pushpender-singh-ap)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pushpender-singh-ap/react-native-peer/issues"
+  },
+  "homepage": "https://github.com/pushpender-singh-ap/react-native-peer#readme",
+  "scripts": {
+    "build": "./build.sh",
+    "prepare": "./build.sh"
+  },
+  "main": "dist/react-native-peer.js",
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "parcel": "1.12.3",
+    "peerjs": "1.5.2"
+  }
+}
