@@ -11,7 +11,10 @@
     "react-native-peer",
     "react-native-peerjs"
   ],
-  "repository": "https://github.com/pushpender-singh-ap/react-native-peer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pushpender-singh-ap/react-native-peer.git"
+  },
   "author": "Pushpender Singh <pushpendersingh694@gmail.com> (https://github.com/pushpender-singh-ap)",
   "license": "MIT",
   "bugs": {
