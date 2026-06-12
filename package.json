@@ -1,6 +1,6 @@
 {
   "name": "react-native-peer",
-  "version": "1.1.0",
+  "version": "2.0.0-beta.1",
   "description": "A React Native wrapper for [PeerJS](https://peerjs.com/). PeerJS simplifies WebRTC peer-to-peer data, video, and audio calls.",
   "keywords": [
     "webrtc",
@@ -25,7 +25,7 @@
   "main": "dist/react-native-peer.js",
   "types": "dist/index.d.ts",
   "devDependencies": {
-    "parcel": "1.12.3",
-    "peerjs": "1.5.2"
+    "parcel": "2.16.4",
+    "peerjs": "1.5.5"
   }
 }
